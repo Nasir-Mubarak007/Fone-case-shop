@@ -78,7 +78,7 @@ const config = {
         },
       },
       animation: {
-        marquee: 'marquee var(--marquee-duration) linear infinite',
+        'marquee': 'marquee var(--marquee-duration) linear infinite',
         'fade-in': 'fade-in 0.5s linear forwards',
         flashing: 'flashing 1.4s infinite linear',
       },
