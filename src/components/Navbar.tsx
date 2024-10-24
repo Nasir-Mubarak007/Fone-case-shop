@@ -5,8 +5,8 @@ import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "./ui/button";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-const Navbar = async() => {
-  const {getUser}= getKindeServerSession()
+const Navbar = async () => {
+  const { getUser } = getKindeServerSession();
   const user = await getUser();
   const isAdmin = user?.email === process.env.ADMIN_EMAIL;
   return (
@@ -28,7 +28,7 @@ const Navbar = async() => {
                 </Link>
                 {isAdmin && (
                   <Link
-                    href={"/api/auth/logout"}
+                    href={"/dashboard"}
                     className={buttonVariants({ size: "sm", variant: "ghost" })}
                   >
                     Dashboard ✨
@@ -53,12 +53,12 @@ const Navbar = async() => {
                 >
                   Sign up
                 </Link>
-                
+
                 <Link
                   href={"/api/auth/login"}
                   className={buttonVariants({
                     size: "sm",
-                    variant: "ghost"
+                    variant: "ghost",
                   })}
                 >
                   Login
