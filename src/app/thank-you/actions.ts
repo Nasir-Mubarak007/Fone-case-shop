@@ -16,7 +16,8 @@ export const getPaymentStatus = async ({ orderId }: { orderId: string }) => {
     include: {
       billingAddress: true,
       configuration: true,
-      shippingAdress: true,
+      shippingAddress: true,
+      user: true,
     },
   });
 

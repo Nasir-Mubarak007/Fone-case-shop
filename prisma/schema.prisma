@@ -43,7 +43,7 @@ model Configuration {
   id              String        @id @default(cuid())
   width           Int
   height          Int
-  imgUrl          String
+  imageUrl        String
   color           CaseColor?
   model           PhoneModel?
   material        CaseMaterial?
@@ -73,9 +73,8 @@ model Order {
 
   shippingAddress   ShippingAddress? @relation(fields: [shippingAddressId], references: [id])
   shippingAddressId String?
-
-  billingAddress   BillingAddress? @relation(fields: [billingAddressId], references: [id])
-  billingAddressId String?
+  billingAddress    BillingAddress?  @relation(fields: [billingAddressId], references: [id])
+  billingAddressId  String?
 
   createdAt DateTime @default(now())
   updated   DateTime @updatedAt
