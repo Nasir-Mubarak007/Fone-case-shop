@@ -11,17 +11,17 @@ import { db } from "@/db";
 import { formatPrice } from "@/lib/utils";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound } from "next/navigation";
-const page = async () => {
+const Page = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
-  if (!user || user?.email !== ADMIN_EMAIL) {
+  if (!user || user.email !== ADMIN_EMAIL) {
     return notFound();
   }
 
-  const orders = await db.order.findMany({
+  const order = await db.order.findMany({
     where: {
       isPaid: true,
       createdAt: {
@@ -48,8 +48,20 @@ const page = async () => {
       amount: true,
     },
   });
+  const lastMonthSum = await db.order.aggregate({
+    where: {
+      isPaid: true,
+      createdAt: {
+        gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+      },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
 
-  const WEEKLY_GOAL = 600;
+  const WEEKLY_GOAL = 500;
+  const MONTHLY_GOAL = 2500;
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
@@ -75,11 +87,33 @@ const page = async () => {
                 />
               </CardFooter>
             </Card>
+
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>Last Month</CardDescription>
+                <CardTitle className="text-4xl">
+                  {formatPrice(lastMonthSum._sum.amount ?? 0)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className=" text-sm to-muted-foreground">
+                  of {formatPrice(MONTHLY_GOAL)} goal
+                </div>
+              </CardContent>
+
+              <CardFooter>
+                <Progress
+                  value={((lastMonthSum._sum.amount ?? 0) * 100) / MONTHLY_GOAL}
+                />
+              </CardFooter>
+            </Card>
           </div>
+
+          <h1 className="text-4xl font-bold tracking-tight">Incoming Orders</h1>
         </div>
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;
