@@ -7,10 +7,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import { db } from "@/db";
 import { formatPrice } from "@/lib/utils";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound } from "next/navigation";
+import StatusDropdown from "./statusDropdown";
 const Page = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
@@ -21,7 +31,7 @@ const Page = async () => {
     return notFound();
   }
 
-  const order = await db.order.findMany({
+  const orders = await db.order.findMany({
     where: {
       isPaid: true,
       createdAt: {
@@ -110,6 +120,43 @@ const Page = async () => {
           </div>
 
           <h1 className="text-4xl font-bold tracking-tight">Incoming Orders</h1>
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Customer</TableHead>
+                <TableHead className="hidden sm:table-cell">Status</TableHead>
+                <TableHead className="hidden sm:table-cell">
+                  Purchase date
+                </TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow className="bg-accent" key={order.id}>
+                  <TableCell>
+                    <div className="font-medium">
+                      {order.shippingAddress?.name}
+                    </div>
+                    <div className="hidden text-sm text-muted-foreground md:inline">
+                      {order.user.email}
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    <StatusDropdown id={order.id} orderStatus={order.status} />
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {order.createdAt.toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {formatPrice(order.amount)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
