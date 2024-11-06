@@ -42,6 +42,6 @@ export function constructMetadata({
       creator: '@anonymia007'
     },
     icons,
-    metadataBase: new URL('')
+    metadataBase: new URL('https://fone-case-shop.vercel.app')
   }
 }
