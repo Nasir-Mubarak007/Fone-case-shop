@@ -13,14 +13,21 @@ import Confetti from "react-dom-confetti";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { createCheckoutSession } from "./actions";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import LoginModal from "../../../components/loginModal";
 
-const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
+import LoginModal from "../../../components/loginModal";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
+// eslint-disable-next-line @next/next/no-async-client-component
+const DesignPreview = async ({
+  configuration,
+}: {
+  configuration: Configuration;
+}) => {
   const router = useRouter();
   const { toast } = useToast();
   const { id } = configuration;
-  const { user } = useKindeBrowserClient();
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
@@ -56,9 +63,9 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
       });
     },
   });
-""
+  "";
   const handleCheckout = () => {
-    console.log(user, "USERRERRE")
+    console.log(user, "USERRERRE");
     if (user) {
       //cr8 payment session
       createPaymentSession({ configId: id });
