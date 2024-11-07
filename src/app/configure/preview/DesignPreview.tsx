@@ -56,8 +56,9 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
       });
     },
   });
-
+""
   const handleCheckout = () => {
+    console.log(user, "USERRERRE")
     if (user) {
       //cr8 payment session
       createPaymentSession({ configId: id });
