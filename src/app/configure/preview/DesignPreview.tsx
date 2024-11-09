@@ -34,7 +34,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     ?.tw;
 
   const { label: modelLabel } = MODELS.options.find(
-    ({ value }) => value === model
+    ({ value }) => value === model,
+    console.log(user, "USERRERRE")
   )!;
 
   let totalPrice = BASE_PRICE;
